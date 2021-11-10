@@ -26,10 +26,10 @@ namespace PhotoSharingApplication.Controllers
             else
                 photos = (from p in context.Photos
                           orderby p.CreatedDate descending
-                          select p).ToList();
+                          select p).Take(number).ToList();
 
             return PartialView("_PhotoGallery", photos);
-        }        
+        }
 
         public ActionResult Display(int id)
         {
@@ -53,7 +53,7 @@ namespace PhotoSharingApplication.Controllers
             photo.CreatedDate = DateTime.Today;
             if (!ModelState.IsValid)
                 return View("Create", photo);
-            
+
             if (image != null)
             {
                 photo.ImageMimeType = image.ContentType;
@@ -62,7 +62,7 @@ namespace PhotoSharingApplication.Controllers
             }
             context.Photos.Add(photo);
             context.SaveChanges();
-            return RedirectToAction("Index");            
+            return RedirectToAction("Index");
         }
 
         public ActionResult Delete(int id)
@@ -89,7 +89,7 @@ namespace PhotoSharingApplication.Controllers
             Photo photo = context.Photos.Find(id);
             if (photo != null)
                 return File(photo.PhotoFile, photo.ImageMimeType);
-            
+
             return null;
         }
     }
